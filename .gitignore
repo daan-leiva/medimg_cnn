@@ -1,0 +1,77 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Environment
+.env
+.venv/
+venv/
+env/
+ENV/
+*.env
+
+# VS Code
+.vscode/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# PyTorch checkpoints / models
+*.pt
+*.pth
+checkpoints/
+models/
+runs/
+logs/
+
+# Flask/Uploads
+instance/
+*.db
+*.sqlite3
+uploads/
+__cache__/
+
+# Images and generated results
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+static/my_images/*
+!static/my_images/.gitkeep
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Output folders
+output/
+*.out
+*.log
+
+# AWS/GCP credentials (should never be committed)
+.aws/
+.gcloud/
+
+# Test results
+htmlcov/
+coverage.xml
+*.cover
+
+# Pip / Conda
+pip-log.txt
+conda-meta/
+
+# Backup files
+*.bak
+*.swp
+*.swo
+
+# Mac/Linux/Windows hidden files
+*.~lock.*
+*.tmp
+*~
