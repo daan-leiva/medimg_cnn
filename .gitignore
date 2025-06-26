@@ -21,10 +21,14 @@ ENV/
 .ipynb_checkpoints/
 
 # PyTorch checkpoints / models
+# Ignore model outputs inside 'models/' but allow .py architecture files
+models/__pycache__/
+models/*.pt
+models/*.pth
+!models/*.py
 *.pt
 *.pth
 checkpoints/
-models/
 runs/
 logs/
 
