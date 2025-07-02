@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import argparse
 
 from models.cnn_model import MedCNN
+from models.cnn_model_large import MedCNN_Large
 from data.utils import get_dataloaders
 from train.evaluate import evaluate_model
 from utils.logger import Logger  # custom logger
@@ -158,7 +159,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Train the MedCNN model on chest X-ray dataset")
     parser.add_argument('--epochs', type=int, default=10, help='Number of training epochs')
     parser.add_argument('--patience', type=int, default=5, help='Early stopping patience')
+    parser.add_argument('--model_size', type=str, required=True, help='Model size: [small | large]')
     args = parser.parse_args()
+
+    # validate model size
+    if args.model_size not in ('small', 'large'):
+        raise ValueError("Model size must be small or large")
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -171,10 +177,13 @@ if __name__ == '__main__':
     logger.info("Loaded data loaders")
 
     # Instantiate model
-    model = MedCNN(num_classes=2)
+    if args.model_size == 'small':
+        model = MedCNN(num_classes=2)
+    else:
+        model = MedCNN_Large(num_classes=2)
     logger.info("Initialized MedCNN model")
 
     # Begin training
     train(model, train_loader=train_loader, val_loader=val_loader, test_loader=test_loader,
           device=device, logger=logger, epochs=args.epochs, lr=1e-3,
-          save_path='medcnn_chestxray_v2.pt', patience=args.patience)
+          save_path='medcnn_chestxray.pt', patience=args.patience)

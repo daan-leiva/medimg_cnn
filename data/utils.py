@@ -3,8 +3,7 @@ from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, random_split
 from torchvision.datasets import ImageFolder
 
-def get_dataloaders(batch_size=32, img_size=224, data_dir="data/raw/chest_xray", val_split=0.1):
-    # Augmentations only for training
+def get_train_transform(img_size=224):
     train_transform = transforms.Compose([
         transforms.Grayscale(num_output_channels=1),
         transforms.Resize((img_size, img_size)),
@@ -15,6 +14,9 @@ def get_dataloaders(batch_size=32, img_size=224, data_dir="data/raw/chest_xray",
         transforms.Normalize(mean=[0.5], std=[0.5])
     ])
 
+    return train_transform
+
+def get_test_transform(img_size=224):
     # Standard transform for val/test
     test_transform = transforms.Compose([
         transforms.Grayscale(num_output_channels=1),
@@ -22,6 +24,15 @@ def get_dataloaders(batch_size=32, img_size=224, data_dir="data/raw/chest_xray",
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.5], std=[0.5])
     ])
+
+    return test_transform
+
+def get_dataloaders(batch_size=32, img_size=224, data_dir="data/raw/chest_xray", val_split=0.1):
+    # Augmentations only for training
+    train_transform = get_train_transform(img_size)
+
+    # Standard transform for val/test
+    test_transform = get_test_transform(img_size)
 
     train_path = os.path.join(data_dir, "train")
     test_path = os.path.join(data_dir, "test")

@@ -6,13 +6,15 @@ import os
 from pathlib import Path
 
 from models.cnn_model import MedCNN
+from models.cnn_model_large import MedCNN_Large
 from visualizations.gradcam import GradCAM, overlay_heatmap
 from utils.logger import Logger
 
 # === Configuration ===
 IMG_SIZE = 224
 CLASS_NAMES = ['Normal', 'Pneumonia']
-MODEL_PATH = 'medcnn_chestxray_v2.pt'
+SMALL_MODEL_PATH = 'results/small_cnn/medcnn_chestxray_v2.pt'
+LARGE_MODEL_PATH = 'results/large_cnn/medcnn_chestxray.pt'
 DEFAULT_IMAGE = 'data/raw/chest_xray/test/NORMAL/IM-0001-0001.jpeg'  # Replace with an existing image
 
 # === Preprocessing pipeline ===
@@ -77,8 +79,14 @@ def main(args):
     logger = Logger(log_file='predict.log')
     logger.info("=== Inference started ===")
 
+    if args.model_size == 'small':
+        model = MedCNN(num_classes=2)
+        MODEL_PATH = SMALL_MODEL_PATH
+    else:
+        model = MedCNN_Large(num_classes=2)
+        MODEL_PATH = LARGE_MODEL_PATH
+
     # Load model
-    model = MedCNN(num_classes=2)
     model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
     model.to(device)
     logger.info(f"Model loaded from {MODEL_PATH}")
@@ -126,6 +134,10 @@ if __name__ == "__main__":
     parser.add_argument('--img', type=str, help='Path to input image')
     parser.add_argument('--overlay', action='store_true', help='Display or save GradCAM overlay')
     parser.add_argument('--save', action='store_true', help='Save overlay to file instead of displaying')
+    parser.add_argument('--model_size', default='small', type=str, help='Model size: small or large')
 
     args = parser.parse_args()
+
+    if args.model_size not in ('small', 'large'):
+        raise ValueError("Model size can only be large or small")
     main(args)
