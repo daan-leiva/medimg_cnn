@@ -64,7 +64,6 @@ class GradCAM:
         # Weight each channel in the activations by the corresponding gradient
         activations = activations * pooled_gradients.view(-1, 1, 1)
 
-
         # Compute mean over channels to get a single heatmap
         heatmap = torch.mean(activations, dim=0).cpu()
         heatmap = np.maximum(heatmap, 0)  # ReLU: only keep positive contributions
@@ -107,7 +106,6 @@ def overlay_heatmap(img_tensor, heatmap, alpha=0.4):
     # Overlay heatmap onto original image
     overlayed = cv2.addWeighted(heatmap_color, alpha, base_img_rgb, 1 - alpha, 0)
     return overlayed
-
 
 def show_gradcam(model, image_tensor, class_idx=None):
     """
